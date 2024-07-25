@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         console.log("multer");
         console.log(req.file)
-        cb(null, '../backcode/frontcode/public/')
+        cb(null, '../frontcode/public/')
     },
     filename: function (req, file, cb) {
         console.log(req.file)
@@ -89,7 +89,7 @@ const productSearch = async (req, res) => {
 
 const productDelete = async (req, res) => {
     await product.findOne({ _id: req.params.id }, { _id: 0, image: 1 }).
-        then((data) => deleteFile(`../backcode/frontcode/public/${data.image}`)).
+        then((data) => deleteFile(`../frontcode/public/${data.image}`)).
         catch((error) => console.log(""));
 
     await product.deleteOne({ _id: req.params.id }).
@@ -110,7 +110,7 @@ const productUpdate = async (req, res) => {
 
 
             await product.findOne({ _id: req.params.id }, { _id: 0, image: 1 }).
-                then((data) => typeof (req.file?.originalname) == 'string' && req.file?.originalname != data.image ? deleteFile(`../backcode/frontcode/public/${data.image}`) : "").
+                then((data) => typeof (req.file?.originalname) == 'string' && req.file?.originalname != data.image ? deleteFile(`../frontcode/public/${data.image}`) : "").
                 catch((error) => console.log(error));
 
 
