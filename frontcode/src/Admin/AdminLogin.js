@@ -68,7 +68,7 @@ const AdminLogin = () => {
                 boxShadow: '0px 0px 1px gray'
             }}>
                 <div className='d-flex justify-content-center'>
-                    <img src="/iics.png" alt="..."></img>
+                    <img src="/IMG-20240721-WA0004.jpg" alt="..."></img>
                 </div>
                 <div className='d-flex justify-content-center'>
                     <span>Admin Panel</span>
