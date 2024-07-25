@@ -62,7 +62,7 @@ const Home = (props) => {
                     }
                 </div>
             </div>
-            <div className='bg-light text-dark position-fixed end-0 bottom-0 ' style={{
+            <div className='bg-light text-dark position-fixed end-2 bottom-0 ' style={{
                 borderRadius: '50%',
                 zIndex: 1,
                 cursor: 'pointer'
