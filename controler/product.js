@@ -15,9 +15,12 @@ const deleteFile = async filePath => {
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '../../TESTCMS/frontcode/public/')
+        console.log("multer");
+        console.log(req.file)
+        cb(null, '../backcode/frontcode/public/')
     },
     filename: function (req, file, cb) {
+        console.log(req.file)
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
         cb(null, file?.originalname)
     }
@@ -28,10 +31,12 @@ const upload = multer({ storage: storage });
 const addProduct = async (req, res) => {
     try {
         upload.single('image')(req, res, async function (err) {
+            console.log(req.body)
+            console.log(req.file)
             if (err instanceof multer.MulterError) {
                 return res.status(500).json({ message: err.message });
             } else if (err) {
-                return res.status(500).json({ message: err.message });
+                return res.status(500).json({ msg: err.message });
             }
 
             const newProduct = new product({
@@ -40,7 +45,7 @@ const addProduct = async (req, res) => {
                 category: req.body.category,
                 image: req.file ? req.file.originalname : '',
                 qty: req.body.qty,
-                description: req.body.description,
+                discription: req.body.discription
             });
             const savedProduct = await newProduct.save();
             res.status(200).json(savedProduct);
@@ -49,19 +54,6 @@ const addProduct = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
-
-// const addProduct =(upload.single('image'),async (req, res) => {
-//     await new product({
-//         name: req.body.name,
-//         price: req.body.price,
-//         category: req.body.category,
-//         image: req.file?.originalname,
-//         qty: req.body.qty,
-//         discription: req.body.discription,
-//     }).save().then((data) => res.status(200).send(data))
-// });
-
 
 // ------------------PRODUCT GET API-----------------------
 
@@ -97,7 +89,7 @@ const productSearch = async (req, res) => {
 
 const productDelete = async (req, res) => {
     await product.findOne({ _id: req.params.id }, { _id: 0, image: 1 }).
-        then((data) => deleteFile(`../../TESTCMS/frontcode/public/${data.image}`)).
+        then((data) => deleteFile(`../backcode/frontcode/public/${data.image}`)).
         catch((error) => console.log(""));
 
     await product.deleteOne({ _id: req.params.id }).
@@ -105,26 +97,41 @@ const productDelete = async (req, res) => {
         catch((error) => res.status(400).send(error));
 };
 
-// ------------------PRODUCT UPDATE API-----------------------
 
-const productUpdate = (multer({ storage: storage }), async (req, res) => {
-    await product.findOne({ _id: req.params.id }, { _id: 0, image: 1 }).
-        then((data) => typeof (req.file?.originalname) == 'string' && req.file?.originalname != data.image ? deleteFile(`../../TESTCMS/frontcode/public/${data.image}`) : "").
-        catch((error) => console.log(error));
-    await product.updateOne(
-        { _id: req.params.id },
-        {
-            $set: ({
-                name: req.body.name,
-                price: req.body.price,
-                category: req.body.category,
-                image: req.file?.originalname,
-                qty: req.body.qty,
-                discription: req.body.discription
-            })
-        }
-    ).then((data) => res.status(200).send(data)).
-        catch((error) => res.status(400).send(error));
-});
+const updates = multer({ storage: storage });
+const productUpdate = async (req, res) => {
+    try {
+        updates.single('image')(req, res, async function (err) {
+            if (err instanceof multer.MulterError) {
+                return res.status(500).json({ message: err.message });
+            } else if (err) {
+                return res.status(500).json({ msg: err.message });
+            }
+
+
+            await product.findOne({ _id: req.params.id }, { _id: 0, image: 1 }).
+                then((data) => typeof (req.file?.originalname) == 'string' && req.file?.originalname != data.image ? deleteFile(`../backcode/frontcode/public/${data.image}`) : "").
+                catch((error) => console.log(error));
+
+
+            await product.updateOne(
+                { _id: req.params.id },
+                {
+                    $set: ({
+                        name: req.body.name,
+                        price: req.body.price,
+                        category: req.body.category,
+                        image: req.file?.originalname,
+                        qty: req.body.qty,
+                        discription: req.body.discription
+                    })
+                }
+            ).then((data) => res.status(200).send(data));
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 
 module.exports = { addProduct, getProduct, productSearch, productDelete, productUpdate }

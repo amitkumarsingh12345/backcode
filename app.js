@@ -2,7 +2,7 @@
 
 const express = require('express');
 const app = express();
-const mongo = require('mongoose');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const port = process.env.port || 11000;
 const user = require('./router/user');
@@ -16,8 +16,7 @@ app.use(cors());
 
 // ----------------DATABASE CONNECTION---------------------
 
-mongo.connect('mongodb://localhost:27017/testdb').
-    then(() => console.log("DB Connected!!")).
+mongoose.connect('mongodb+srv://amitkumarsingh1482:amit1234@first-c.2z2tzps.mongodb.net/db').then(() => console.log("DB Connected!!")).
     catch((err) => console.log({ "Error": err }));
 
 app.use(bodyParser.json());
@@ -32,11 +31,6 @@ app.use(express.static(path.join(__dirname, 'frontcode/build')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/frontcode/build/index.html'));
 });
-
-// app.get("*", (req, res) => {
-//     app.use(express.static(path.resolve(__dirname, "frontcode", "build")));
-//     res.sendFile(path.resolve(__dirname, "frontcode", "build", "index.html"));
-// });
 
 // ----------------SERVER CONNECTION---------------------
 

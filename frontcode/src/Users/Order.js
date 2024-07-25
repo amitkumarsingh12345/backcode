@@ -13,8 +13,8 @@ const Order = () => {
 
   const orderHandler = async () => {
     let data = await axios.get(`${window.location.origin}/api/v5/order/find`);
-    data = data?.data.filter((dt) => dt.email == user)[0].showdata;
     console.log(data)
+    data = data?.data.filter((dt) => dt.email == user)[0].showdata;
     setAlldata(data);
   }
 

@@ -31,6 +31,8 @@ const AddProduct = () => {
         formData.append('qty', qty);
         formData.append('discription', discription);
 
+        console.log(formData)
+
         let result = await axios.post(`${window.location.origin}/api/v4/product/create`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'

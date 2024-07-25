@@ -5,13 +5,12 @@ const category = require('../models/category');
 
 const deleteProductHandler = async (props) => {
     try {
-        await product.deleteMany({ category: props });
+        const dt = await product.deleteMany({ category: props });
+        console.log(dt);
     } catch (error) {
         res.status(401).send(error);
     }
 }
-
-
 
 // ------------------ADD CATEGORY API-----------------------
 
@@ -45,7 +44,7 @@ const deleteCategory = async (req, res) => {
     try {
         await category.findOne({ _id: req.params.id }).
             then((data) => deleteProductHandler(data.name))
-
+console.log(req.params.id)
         await category.deleteOne({ _id: req.params.id }).
             then((data) => res.status(200).send(data))
     } catch (error) {

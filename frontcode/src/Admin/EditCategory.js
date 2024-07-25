@@ -39,6 +39,7 @@ const EditCategory = () => {
     if (check.length > 0 && params.id != check[0]?._id) {
       setFindcat(true);
     } else {
+      console.log(params);
       const dt = await axios.put(`${window.location.origin}/api/v3/category/update/${params.id}`, data);
       navigate('/Categories');
     }
